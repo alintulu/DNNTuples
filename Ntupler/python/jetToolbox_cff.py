@@ -73,8 +73,8 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 	if runOnData:
 		GetJetMCFlavour = False
 		GetSubjetMCFlavour = False
-        if dataTier.startswith(('miniAOD', 'nanoAOD')): miniAOD = True
-        else: miniAOD = False
+		if dataTier.startswith(('miniAOD', 'nanoAOD')): miniAOD = True
+		else: miniAOD = False
 	###############################################################################
 
 	###############################################################################
@@ -144,14 +144,14 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 		]
 
 	defaultBoostedBTagDiscriminators = [
-                        'pfBoostedDoubleSecondaryVertexAK8BJetTags',
-                        'pfMassIndependentDeepDoubleBvLJetTags:probQCD',
-                        'pfMassIndependentDeepDoubleBvLJetTags:probHbb',
-                        'pfMassIndependentDeepDoubleCvLJetTags:probQCD',
-                        'pfMassIndependentDeepDoubleCvLJetTags:probHcc',
-                        'pfMassIndependentDeepDoubleCvBJetTags:probHbb',
-                        'pfMassIndependentDeepDoubleCvBJetTags:probHcc',
-                        ]
+						'pfBoostedDoubleSecondaryVertexAK8BJetTags',
+						'pfMassIndependentDeepDoubleBvLJetTags:probQCD',
+						'pfMassIndependentDeepDoubleBvLJetTags:probHbb',
+						'pfMassIndependentDeepDoubleCvLJetTags:probQCD',
+						'pfMassIndependentDeepDoubleCvLJetTags:probHcc',
+						'pfMassIndependentDeepDoubleCvBJetTags:probHbb',
+						'pfMassIndependentDeepDoubleCvBJetTags:probHcc',
+						]
 
 	if updateCollection and (jetALGO=='AK8'):
 		defaultBoostedBTagDiscriminators += [
@@ -167,13 +167,13 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 		if jetSize == 0.4: bTagDiscriminators = defaultBTagDiscriminators
 		elif jetSize == 0.8: bTagDiscriminators = defaultBoostedBTagDiscriminators
 		else:
-                    bTagDiscriminators = None
-                    print('|---- jetToolBox: btag discriminators are recommended for AK4 and AK8 jets. For a different cone size, please especify the discriminators. Turning OFF all the default btag discriminators.')
+					bTagDiscriminators = None
+					print('|---- jetToolBox: btag discriminators are recommended for AK4 and AK8 jets. For a different cone size, please especify the discriminators. Turning OFF all the default btag discriminators.')
 	if subjetBTagDiscriminators is '':
 		subjetBTagDiscriminators = defaultBTagDiscriminators
 		if ( (addPrunedSubjets or addSoftDropSubjets) or (updateCollection and updateCollectionSubjets) ) and subjetBTagDiscriminators and verbosity>=2: print('|---- jetToolBox: Adding these btag discriminators: '+str(subjetBTagDiscriminators)+' in the subjet collection.')
 	if (bTagDiscriminators is not None) and verbosity>=2: print('|---- jetToolBox: Adding these btag discriminators: '+str(bTagDiscriminators)+' in the jet collection.')
-        if (bTagDiscriminators is not None) and any( 'Deep' in i for i in bTagDiscriminators ) and not (jetALGO=='AK4' and PUMethod=='CHS'): print('|---- jetToolBox: DeepCSV and DeepFlavour btag discriminators were trained for AK4 CHS jets. You are trying to use it in other configuration. Use it at your own risk.')
+		if (bTagDiscriminators is not None) and any( 'Deep' in i for i in bTagDiscriminators ) and not (jetALGO=='AK4' and PUMethod=='CHS'): print('|---- jetToolBox: DeepCSV and DeepFlavour btag discriminators were trained for AK4 CHS jets. You are trying to use it in other configuration. Use it at your own risk.')
 	#################################################################################
 
 
@@ -254,7 +254,7 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 				if miniAOD:
 				  puppi.vertexName = cms.InputTag('offlineSlimmedPrimaryVertices')
 				  puppi.clonePackedCands = cms.bool(True)
-                                _addProcessAndTask(proc, 'puppi', getattr(proc, 'puppi'))
+								_addProcessAndTask(proc, 'puppi', getattr(proc, 'puppi'))
 				jetSeq += getattr(proc, 'puppi' )
 				srcForPFJets = 'puppi'
 
@@ -279,7 +279,7 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 			else:
 				proc.load('CommonTools.PileupAlgos.softKiller_cfi')
 				getattr( proc, 'softKiller' ).PFCandidates = cms.InputTag( pfCand )
-                                _addProcessAndTask(proc, 'softKiller', getattr(proc, 'softKiller'))
+								_addProcessAndTask(proc, 'softKiller', getattr(proc, 'softKiller'))
 				jetSeq += getattr(proc, 'softKiller' )
 				srcForPFJets = 'softKiller'
 
@@ -317,9 +317,9 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 					if verbosity>=1: print('|---- jetToolBox: Not running CHS algorithm because keyword CHS was specified in nameNewPFCollection, but applying CHS corrections.')
 				else:
 					_addProcessAndTask( proc, 'chs',
-                                                cms.EDFilter('CandPtrSelector',
-                                                    src = cms.InputTag( pfCand ),
-                                                    cut = cms.string('fromPV')) )
+												cms.EDFilter('CandPtrSelector',
+													src = cms.InputTag( pfCand ),
+													cut = cms.string('fromPV')) )
 					jetSeq += getattr(proc, 'chs')
 					srcForPFJets = 'chs'
 			else:
@@ -368,12 +368,12 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 		##### In case PUMEthod is SK or CS, rename payload to CHS
 		if 'None' in JETCorrPayload: JEC = None
 		else:
-                    if JETCorrPayload not in payloadList:
-                        print('|---- jetToolBox: JEC '+JETCorrPayload+' corrections not centrally supported (AK4PFchs,AK4PFPuppi,AK8PFchs,AK8PFPuppi). jetToolBox will assigned the closest JECs.')
-                        tmpJetPayload = JETCorrPayload.split('PF')[1]
-                        if (int(size) >= 8): JETCorrPayload = 'AK8PF'+tmpJetPayload
-                        else: JETCorrPayload = 'AK4PF'+tmpJetPayload
-                    JEC = ( JETCorrPayload.replace('CS','chs').replace('SK','chs') , JETCorrLevels, 'None' )
+					if JETCorrPayload not in payloadList:
+						print('|---- jetToolBox: JEC '+JETCorrPayload+' corrections not centrally supported (AK4PFchs,AK4PFPuppi,AK8PFchs,AK8PFPuppi). jetToolBox will assigned the closest JECs.')
+						tmpJetPayload = JETCorrPayload.split('PF')[1]
+						if (int(size) >= 8): JETCorrPayload = 'AK8PF'+tmpJetPayload
+						else: JETCorrPayload = 'AK4PF'+tmpJetPayload
+					JEC = ( JETCorrPayload.replace('CS','chs').replace('SK','chs') , JETCorrLevels, 'None' )
 		if verbosity>=2: print('|---- jetToolBox: Applying these corrections: '+str(JEC))
 
 		if addPrunedSubjets or addSoftDropSubjets or addCMSTopTagger or addHEPTopTagger:
@@ -486,10 +486,10 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 		#########################################################################
 
 	mod["PFJetsOrUpdate"] = mod["PFJets"] if not updateCollection else updateCollection
-        if (bTagDiscriminators is not None):
-            for bD in bTagDiscriminators: jetVariables[bD] = Var("bDiscriminator('"+bD+"')", float, doc='bDiscriminator '+bD, precision=10)
-        if (subjetBTagDiscriminators is not None):
-            for bD in subjetBTagDiscriminators: subjetVariables[bD] = Var("bDiscriminator('"+bD+"')", float, doc='subjet bDiscriminator '+bD, precision=10)
+		if (bTagDiscriminators is not None):
+			for bD in bTagDiscriminators: jetVariables[bD] = Var("bDiscriminator('"+bD+"')", float, doc='bDiscriminator '+bD, precision=10)
+		if (subjetBTagDiscriminators is not None):
+			for bD in subjetBTagDiscriminators: subjetVariables[bD] = Var("bDiscriminator('"+bD+"')", float, doc='subjet bDiscriminator '+bD, precision=10)
 	#################################################################################
 
 	#################################################################################
@@ -823,7 +823,7 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 
 
 	#################################################################################
-        ####### Adding CMSTopTagger  (NOTE: it has not been validated or test since 2017)
+		####### Adding CMSTopTagger  (NOTE: it has not been validated or test since 2017)
 	if addCMSTopTagger :
 
 		if 'CA' in jetALGO :
@@ -953,7 +953,7 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 				matched = cms.InputTag(mod["PFJetsMassDrop"]), distMax = cms.double( jetSize ) ) )
 			elemToKeep += [ 'keep *_'+mod["MassDropFilteredMass"]+'_*_*' ]
 			getattr( proc, mod["PATJets"]).userData.userFloats.src += [ mod["MassDropFilteredMass"] ]
-		        jetVariables['massDropFilteredMass'] = Var("userFloat('"+mod["MassDropFilteredMass"]+"')", float, doc='MassDropFiltered mass', precision=10)
+				jetVariables['massDropFilteredMass'] = Var("userFloat('"+mod["MassDropFilteredMass"]+"')", float, doc='MassDropFiltered mass', precision=10)
 			jetSeq += getattr(proc, mod["PFJetsMassDrop"])
 			jetSeq += getattr(proc, mod["MassDropFilteredMass"])
 			toolsUsed.append( mod["MassDropFilteredMass"] )
@@ -966,108 +966,108 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 	####### Adding HEPTopTagger
 	if addHEPTopTagger:
 		if ( int(size) != 1.5 ) and ( 'CA' in jetALGO ): print('|---- jetToolBox: HEPTtopTagger is recommented for CA15 jets. JTB will run the algorithm but use it on your own risk.')
-                print('|---- jetToolBox: When running HEPTopTagger one will have several warnings about using an old version of Nsubjetiness. This is expected.')
+				print('|---- jetToolBox: When running HEPTopTagger one will have several warnings about using an old version of Nsubjetiness. This is expected.')
 
 		mod["PFJetsHEPTopTag"] = mod["PFJets"].replace(jetalgo,"hepTopTag")
 		mod["PFJetsHEPTopTagMass"] = mod["PFJetsHEPTopTag"]+'Mass'+jetALGO
 		_addProcessAndTask( proc, mod["PFJetsHEPTopTag"], hepTopTaggerV2.clone(
-                            src = cms.InputTag( srcForPFJets ),
-                            jetPtMin = cms.double(100.0),
-                            mode = cms.int32(4),
-                            minFatjetPt = cms.double(200.),
-                            minCandPt = cms.double(200.),
-                            minSubjetPt = cms.double(30.),
-                            writeCompound = cms.bool(True),
-                            minCandMass = cms.double(0.),
-                            maxCandMass = cms.double(1000),
-                            massRatioWidth = cms.double(100.),
-                            minM23Cut = cms.double(0.),
-                            minM13Cut = cms.double(0.),
-                            maxM13Cut = cms.double(2.),
-                            jetCollInstanceName=cms.string('SubJets'),
-                            ))
+							src = cms.InputTag( srcForPFJets ),
+							jetPtMin = cms.double(100.0),
+							mode = cms.int32(4),
+							minFatjetPt = cms.double(200.),
+							minCandPt = cms.double(200.),
+							minSubjetPt = cms.double(30.),
+							writeCompound = cms.bool(True),
+							minCandMass = cms.double(0.),
+							maxCandMass = cms.double(1000),
+							massRatioWidth = cms.double(100.),
+							minM23Cut = cms.double(0.),
+							minM13Cut = cms.double(0.),
+							maxM13Cut = cms.double(2.),
+							jetCollInstanceName=cms.string('SubJets'),
+							))
 		elemToKeep += [ 'keep *_'+mod["PFJetsHEPTopTag"]+'__*' ]
 		elemToKeep += [ 'keep *_'+mod["PFJetsHEPTopTag"]+'_SubJets_*' ]
 		jetSeq += getattr(proc, mod["PFJetsHEPTopTag"])
 		toolsUsed.append( mod["PFJetsHEPTopTag"] )
 		_addProcessAndTask( proc, mod["PFJetsHEPTopTagMass"],
-                        ak8PFJetsCHSPrunedMass.clone(
-                            src = cms.InputTag(mod["PFJets"]),
-                            matched = cms.InputTag(mod["PFJetsHEPTopTag"]),
-                            distMax = cms.double( jetSize ),
-                            #values = cms.vstring([ "mass", "tagInfo().properties().fRec()"] ),
-                            #valueLabels = cms.vstring(["mass","fRec"])
-                            ) )
+						ak8PFJetsCHSPrunedMass.clone(
+							src = cms.InputTag(mod["PFJets"]),
+							matched = cms.InputTag(mod["PFJetsHEPTopTag"]),
+							distMax = cms.double( jetSize ),
+							#values = cms.vstring([ "mass", "tagInfo().properties().fRec()"] ),
+							#valueLabels = cms.vstring(["mass","fRec"])
+							) )
 		elemToKeep += [ 'keep *_'+mod["PFJetsHEPTopTagMass"]+'_*_*' ]
-                getattr( proc, mod["PATJets"] ).userData.userFloats.src += [ mod["PFJetsHEPTopTagMass"] ]
-                #getattr( proc, mod["PATJets"] ).userData.userFloats.src += [ "fRec" ]
+				getattr( proc, mod["PATJets"] ).userData.userFloats.src += [ mod["PFJetsHEPTopTagMass"] ]
+				#getattr( proc, mod["PATJets"] ).userData.userFloats.src += [ "fRec" ]
 		jetVariables['HEPTopTagMass'] = Var("userFloat('"+mod["PFJetsHEPTopTagMass"]+"')", float, doc='HEPTopTagMass', precision=10)
 		jetSeq += getattr(proc, mod["PFJetsHEPTopTagMass"])
 		toolsUsed.append( mod["PFJetsHEPTopTagMass"] )
 
 
-                mod["PATJetsHEPTopTagLabel"] = 'HEPTopTag'+PUMethod+postFix
-                addJetCollection(
-                                proc,
-                                labelName = mod["PATJetsHEPTopTagLabel"],
-                                jetSource = cms.InputTag(mod["PFJetsHEPTopTag"]),
-                                jetCorrections = JEC if JEC is not None else None,
-                                pfCandidates = cms.InputTag( pfCand ),
-                                pvSource = cms.InputTag( pvLabel),
-                                svSource = cms.InputTag( svLabel ),
-                                muSource = cms.InputTag( muLabel ),
-                                elSource = cms.InputTag( elLabel ),
-                                btagDiscriminators = bTagDiscriminators,
-                                btagInfos = bTagInfos,
-                                genJetCollection = cms.InputTag(mod["GenJetsNoNu"]),
-                                getJetMCFlavour = False, # jet flavor should always be disabled for groomed jets
-                                genParticles = cms.InputTag(genParticlesLabel)
-                                )
-                mod["PATJetsHEPTopTag"] = patJets+mod["PATJetsHEPTopTagLabel"]
-                mod["selPATJetsHEPTopTag"] = selPatJets+mod["PATJetsHEPTopTagLabel"]
-                getattr(proc,mod["PATJetsHEPTopTag"]).addTagInfos = True
-                getattr(proc,mod["PATJetsHEPTopTag"]).tagInfoSources = cms.VInputTag( cms.InputTag(mod["PFJetsHEPTopTag"]))
-                _addProcessAndTask( proc, mod["selPATJetsHEPTopTag"],
-                        selectedPatJets.clone( src = mod["PATJetsHEPTopTag"], cut = Cut ) )
+				mod["PATJetsHEPTopTagLabel"] = 'HEPTopTag'+PUMethod+postFix
+				addJetCollection(
+								proc,
+								labelName = mod["PATJetsHEPTopTagLabel"],
+								jetSource = cms.InputTag(mod["PFJetsHEPTopTag"]),
+								jetCorrections = JEC if JEC is not None else None,
+								pfCandidates = cms.InputTag( pfCand ),
+								pvSource = cms.InputTag( pvLabel),
+								svSource = cms.InputTag( svLabel ),
+								muSource = cms.InputTag( muLabel ),
+								elSource = cms.InputTag( elLabel ),
+								btagDiscriminators = bTagDiscriminators,
+								btagInfos = bTagInfos,
+								genJetCollection = cms.InputTag(mod["GenJetsNoNu"]),
+								getJetMCFlavour = False, # jet flavor should always be disabled for groomed jets
+								genParticles = cms.InputTag(genParticlesLabel)
+								)
+				mod["PATJetsHEPTopTag"] = patJets+mod["PATJetsHEPTopTagLabel"]
+				mod["selPATJetsHEPTopTag"] = selPatJets+mod["PATJetsHEPTopTagLabel"]
+				getattr(proc,mod["PATJetsHEPTopTag"]).addTagInfos = True
+				getattr(proc,mod["PATJetsHEPTopTag"]).tagInfoSources = cms.VInputTag( cms.InputTag(mod["PFJetsHEPTopTag"]))
+				_addProcessAndTask( proc, mod["selPATJetsHEPTopTag"],
+						selectedPatJets.clone( src = mod["PATJetsHEPTopTag"], cut = Cut ) )
 		jetSeq += getattr(proc, mod["selPATJetsHEPTopTag"])
 		elemToKeep += [ 'keep *_'+mod["selPATJetsHEPTopTag"]+'_*_*' ]
 
-                mod["PATSubjetsHEPTopTagLabel"] = mod["PATJetsHEPTopTagLabel"]+'Subjets'
-                addJetCollection(
-                                proc,
-                                labelName = mod["PATSubjetsHEPTopTagLabel"],
-                                jetSource = cms.InputTag(mod["PFJetsHEPTopTag"], 'SubJets'),
-                                algo = jetalgo,  # needed for subjet b tagging
-                                rParam = jetSize,  # needed for subjet b tagging
-                                jetCorrections = subJEC if subJEC is not None else None,
-                                pfCandidates = cms.InputTag( pfCand ),
-                                pvSource = cms.InputTag( pvLabel),
-                                svSource = cms.InputTag( svLabel ),
-                                muSource = cms.InputTag( muLabel ),
-                                elSource = cms.InputTag( elLabel ),
-                                btagDiscriminators = bTagDiscriminators,
-                                btagInfos = bTagInfos,
-                                genJetCollection = cms.InputTag( mod["GenJetsNoNu"]),
-                                getJetMCFlavour = GetSubjetMCFlavour,
-                                explicitJTA = True,  # needed for subjet b tagging
-                                svClustering = True, # needed for subjet b tagging
-                                fatJets=cms.InputTag(mod["PFJets"]),             # needed for subjet flavor clustering
-                                groomedFatJets=cms.InputTag(mod["PATJetsHEPTopTag"]), # needed for subjet flavor clustering
-                                genParticles = cms.InputTag(genParticlesLabel)
-                                )
-                mod["PATSubjetsHEPTopTag"] = patJets+mod["PATSubjetsHEPTopTagLabel"]
-                mod["selPATSubjetsHEPTopTag"] = selPatJets+mod["PATSubjetsHEPTopTagLabel"]
+				mod["PATSubjetsHEPTopTagLabel"] = mod["PATJetsHEPTopTagLabel"]+'Subjets'
+				addJetCollection(
+								proc,
+								labelName = mod["PATSubjetsHEPTopTagLabel"],
+								jetSource = cms.InputTag(mod["PFJetsHEPTopTag"], 'SubJets'),
+								algo = jetalgo,  # needed for subjet b tagging
+								rParam = jetSize,  # needed for subjet b tagging
+								jetCorrections = subJEC if subJEC is not None else None,
+								pfCandidates = cms.InputTag( pfCand ),
+								pvSource = cms.InputTag( pvLabel),
+								svSource = cms.InputTag( svLabel ),
+								muSource = cms.InputTag( muLabel ),
+								elSource = cms.InputTag( elLabel ),
+								btagDiscriminators = bTagDiscriminators,
+								btagInfos = bTagInfos,
+								genJetCollection = cms.InputTag( mod["GenJetsNoNu"]),
+								getJetMCFlavour = GetSubjetMCFlavour,
+								explicitJTA = True,  # needed for subjet b tagging
+								svClustering = True, # needed for subjet b tagging
+								fatJets=cms.InputTag(mod["PFJets"]),             # needed for subjet flavor clustering
+								groomedFatJets=cms.InputTag(mod["PATJetsHEPTopTag"]), # needed for subjet flavor clustering
+								genParticles = cms.InputTag(genParticlesLabel)
+								)
+				mod["PATSubjetsHEPTopTag"] = patJets+mod["PATSubjetsHEPTopTagLabel"]
+				mod["selPATSubjetsHEPTopTag"] = selPatJets+mod["PATSubjetsHEPTopTagLabel"]
 
-                _addProcessAndTask( proc, mod["selPATSubjetsHEPTopTag"], selectedPatJets.clone( src = mod["PATSubjetsHEPTopTag"], cut = Cut ) )
-                mod["PATJetsHEPTopTagPacked"] = mod["PATJetsHEPTopTag"]+'Packed'
-                _addProcessAndTask( proc, mod["PATJetsHEPTopTagPacked"],
-                                cms.EDProducer("BoostedJetMerger",
-                                        jetSrc=cms.InputTag(mod["PATJetsHEPTopTag"]),
-                                        subjetSrc=cms.InputTag(mod["PATSubjetsHEPTopTag"])
-                                        ))
-                jetSeq += getattr(proc, mod["PATJetsHEPTopTagPacked"])
-                elemToKeep += [ 'keep *_'+mod["PATJetsHEPTopTagPacked"]+'_*_*' ]
-                toolsUsed.append( mod["PATJetsHEPTopTagPacked"] )
+				_addProcessAndTask( proc, mod["selPATSubjetsHEPTopTag"], selectedPatJets.clone( src = mod["PATSubjetsHEPTopTag"], cut = Cut ) )
+				mod["PATJetsHEPTopTagPacked"] = mod["PATJetsHEPTopTag"]+'Packed'
+				_addProcessAndTask( proc, mod["PATJetsHEPTopTagPacked"],
+								cms.EDProducer("BoostedJetMerger",
+										jetSrc=cms.InputTag(mod["PATJetsHEPTopTag"]),
+										subjetSrc=cms.InputTag(mod["PATSubjetsHEPTopTag"])
+										))
+				jetSeq += getattr(proc, mod["PATJetsHEPTopTagPacked"])
+				elemToKeep += [ 'keep *_'+mod["PATJetsHEPTopTagPacked"]+'_*_*' ]
+				toolsUsed.append( mod["PATJetsHEPTopTagPacked"] )
 	#################################################################################
 
 
@@ -1093,8 +1093,8 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 
 		elemToKeep += [ 'keep *_'+mod["Njettiness"]+'_*_*' ]
 		for tau in rangeTau:
-                    getattr( proc, mod["PATJets"]).userData.userFloats.src += [mod["Njettiness"]+':tau'+str(tau) ]
-		    jetVariables[mod["Njettiness"]+':tau'+str(tau)] = Var("userFloat('"+mod["Njettiness"]+':tau'+str(tau)+"')", float, doc='Nsubjetiness tau'+str(tau), precision=10)
+					getattr( proc, mod["PATJets"]).userData.userFloats.src += [mod["Njettiness"]+':tau'+str(tau) ]
+			jetVariables[mod["Njettiness"]+':tau'+str(tau)] = Var("userFloat('"+mod["Njettiness"]+':tau'+str(tau)+"')", float, doc='Nsubjetiness tau'+str(tau), precision=10)
 		jetSeq += getattr(proc, mod["Njettiness"])
 		toolsUsed.append( mod["Njettiness"] )
 	#################################################################################
@@ -1139,8 +1139,8 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 
 		elemToKeep += [ 'keep *_'+mod["Nsubjettiness"]+'_*_*' ]
 		for tau in rangeTau:
-                    getattr( proc, ( mod["NsubPATSubjets"] if not updateCollectionSubjets else patSubJets ) ).userData.userFloats.src += [mod["Nsubjettiness"]+':tau'+str(tau) ]
-		    subjetVariables[mod["Nsubjettiness"]+':tau'+str(tau)] = Var("userFloat('"+mod["Nsubjettiness"]+':tau'+str(tau)+"')", float, doc='Nsubjetiness tau'+str(tau), precision=10)
+					getattr( proc, ( mod["NsubPATSubjets"] if not updateCollectionSubjets else patSubJets ) ).userData.userFloats.src += [mod["Nsubjettiness"]+':tau'+str(tau) ]
+			subjetVariables[mod["Nsubjettiness"]+':tau'+str(tau)] = Var("userFloat('"+mod["Nsubjettiness"]+':tau'+str(tau)+"')", float, doc='Nsubjetiness tau'+str(tau), precision=10)
 		jetSeq += getattr(proc, mod["Nsubjettiness"])
 		toolsUsed.append( mod["Nsubjettiness"] )
 	#################################################################################
@@ -1164,10 +1164,10 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 			#getattr( proc, mod["PATJets"]).userData.userFloats.src += [ mod["QGTagger"]+':axis2']
 			#getattr( proc, mod["PATJets"]).userData.userFloats.src += [ mod["QGTagger"]+':mult']
 			#getattr( proc, mod["PATJets"]).userData.userFloats.src += [ mod["QGTagger"]+':ptD']
-		        jetVariables[mod["QGTagger"]+':qgLikelihood'] = Var("userFloat('"+mod["QGTagger"]+':qgLikelihood'+"')", float, doc='Quark/Gluon likelihood', precision=10)
-                        #jetVariables[mod["QGTagger"]+':axis2'] = Var("userFloat('"+mod["QGTagger"]+':axis2'+"')", float, doc='QGL variable: minor axis of jet ellipse', precision=10)
-                        #jetVariables[mod["QGTagger"]+':mult'] = Var("userFloat('"+mod["QGTagger"]+':mult'+"')", float, doc='QGL variable: jet constituent multiplicity', precision=10)
-                        #jetVariables[mod["QGTagger"]+':ptD'] = Var("userFloat('"+mod["QGTagger"]+':ptD'+"')", float, doc='QGL variable: ptD', precision=10)
+				jetVariables[mod["QGTagger"]+':qgLikelihood'] = Var("userFloat('"+mod["QGTagger"]+':qgLikelihood'+"')", float, doc='Quark/Gluon likelihood', precision=10)
+						#jetVariables[mod["QGTagger"]+':axis2'] = Var("userFloat('"+mod["QGTagger"]+':axis2'+"')", float, doc='QGL variable: minor axis of jet ellipse', precision=10)
+						#jetVariables[mod["QGTagger"]+':mult'] = Var("userFloat('"+mod["QGTagger"]+':mult'+"')", float, doc='QGL variable: jet constituent multiplicity', precision=10)
+						#jetVariables[mod["QGTagger"]+':ptD'] = Var("userFloat('"+mod["QGTagger"]+':ptD'+"')", float, doc='QGL variable: ptD', precision=10)
 			jetSeq += getattr(proc, mod["QGTagger"])
 
 			toolsUsed.append( mod["QGTagger"] )
@@ -1204,10 +1204,10 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 					)
 
 			getattr( proc, mod["PATJets"]).userData.userFloats.src += [mod["PUJetIDEval"]+':fullDiscriminant']
-		        jetVariables[mod["PUJetIDEval"]+':fullDiscriminant'] = Var("userFloat('"+mod["PUJetIDEval"]+':fullDiscriminant'+"')", float, doc='PUJetID fulldiscriminant', precision=10)
+				jetVariables[mod["PUJetIDEval"]+':fullDiscriminant'] = Var("userFloat('"+mod["PUJetIDEval"]+':fullDiscriminant'+"')", float, doc='PUJetID fulldiscriminant', precision=10)
 			getattr( proc, mod["PATJets"]).userData.userInts.src += [mod["PUJetIDEval"]+':cutbasedId',mod["PUJetIDEval"]+':fullId']
-		        jetVariables[mod["PUJetIDEval"]+':cutbasedId'] = Var("userInt('"+mod["PUJetIDEval"]+':cutbasedId'+"')", int, doc='PUJetID cutbased Id', precision=10)
-		        jetVariables[mod["PUJetIDEval"]+':fullId'] = Var("userInt('"+mod["PUJetIDEval"]+':fullId'+"')", int, doc='PUJetID full Id', precision=10)
+				jetVariables[mod["PUJetIDEval"]+':cutbasedId'] = Var("userInt('"+mod["PUJetIDEval"]+':cutbasedId'+"')", int, doc='PUJetID cutbased Id', precision=10)
+				jetVariables[mod["PUJetIDEval"]+':fullId'] = Var("userInt('"+mod["PUJetIDEval"]+':fullId'+"')", int, doc='PUJetID full Id', precision=10)
 			elemToKeep += ['keep *_'+mod["PUJetIDEval"]+'_*_*']
 			toolsUsed.append( mod["PUJetIDEval"] )
 		else:
@@ -1291,27 +1291,27 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 
 	#################################################################################
 	###### Computing jetID
-        from PhysicsTools.NanoAOD.jets_cff import looseJetId, tightJetId, tightJetIdLepVeto
+		from PhysicsTools.NanoAOD.jets_cff import looseJetId, tightJetId, tightJetIdLepVeto
 
-        mod["looseJetId"] = mod["PATJets"]+"looseJetId"
+		mod["looseJetId"] = mod["PATJets"]+"looseJetId"
 	_addProcessAndTask( proc, mod["looseJetId"], looseJetId.clone(src = cms.InputTag(mod["PATJets"]) ))
-        mod["tightJetId"] = mod["PATJets"]+"tightJetId"
+		mod["tightJetId"] = mod["PATJets"]+"tightJetId"
 	_addProcessAndTask( proc, mod["tightJetId"], tightJetId.clone(src = cms.InputTag(mod["PATJets"]) ))
-        mod["tightJetIdLepVeto"] = mod["PATJets"]+"tightJetIdLepVeto"
+		mod["tightJetIdLepVeto"] = mod["PATJets"]+"tightJetIdLepVeto"
 	_addProcessAndTask( proc, mod["tightJetIdLepVeto"], tightJetIdLepVeto.clone(src = cms.InputTag(mod["PATJets"]) ))
 
-        mod["PATJetswithUserData"] = mod["PATJets"]+"PATJetswithUserData"
+		mod["PATJetswithUserData"] = mod["PATJets"]+"PATJetswithUserData"
 	_addProcessAndTask( proc, mod["PATJetswithUserData"],
-                            cms.EDProducer("PATJetUserDataEmbedder",
-                                    src = cms.InputTag(mod["PATJets"]),
-                                    userFloats = cms.PSet(),
-                                    userInts= cms.PSet(
-                                       looseId = cms.InputTag(mod["looseJetId"]),
-                                       tightId = cms.InputTag(mod["tightJetId"]),
-                                       tightIdLepVeto = cms.InputTag(mod["tightJetIdLepVeto"]),
-                                        ))
-                            )
-        jetSeq += getattr(proc, mod["PATJetswithUserData"])
+							cms.EDProducer("PATJetUserDataEmbedder",
+									src = cms.InputTag(mod["PATJets"]),
+									userFloats = cms.PSet(),
+									userInts= cms.PSet(
+									   looseId = cms.InputTag(mod["looseJetId"]),
+									   tightId = cms.InputTag(mod["tightJetId"]),
+									   tightIdLepVeto = cms.InputTag(mod["tightJetIdLepVeto"]),
+										))
+							)
+		jetSeq += getattr(proc, mod["PATJetswithUserData"])
 	#################################################################################
 
 
@@ -1319,8 +1319,8 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 	###### Saving jet collections
 	if hasattr(proc, 'patJetPartons'): proc.patJetPartons.particles = genParticlesLabel
 
-        if dataTier.startswith("nanoAOD"): _addProcessAndTask( proc, mod["selPATJets"], cms.EDFilter("PATJetRefSelector", src = cms.InputTag(mod["PATJetswithUserData"]), cut = cms.string( Cut ) ) )
-        else: _addProcessAndTask( proc, mod["selPATJets"], selectedPatJets.clone( src = mod["PATJets"], cut = Cut ) )
+		if dataTier.startswith("nanoAOD"): _addProcessAndTask( proc, mod["selPATJets"], cms.EDFilter("PATJetRefSelector", src = cms.InputTag(mod["PATJetswithUserData"]), cut = cms.string( Cut ) ) )
+		else: _addProcessAndTask( proc, mod["selPATJets"], selectedPatJets.clone( src = mod["PATJets"], cut = Cut ) )
 	elemToKeep += [ 'keep *_'+mod["selPATJets"]+'_*_*' ]
 	elemToKeep += [ 'drop *_'+mod["selPATJets"]+'_calo*_*' ]
 	elemToKeep += [ 'drop *_'+mod["selPATJets"]+'_tagInfos_*' ]
@@ -1340,104 +1340,104 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 	#################################################################################
 	###### adding variables as nanoAOD variables
 	if dataTier.startswith('nanoAOD'):
-            print('\033[1m'+'|---- jetToolBox: RUNNING FROM MINIAOD BUT STORING VARIABLES IN NANOAOD FORMAT.'+'\033[0m')
+			print('\033[1m'+'|---- jetToolBox: RUNNING FROM MINIAOD BUT STORING VARIABLES IN NANOAOD FORMAT.'+'\033[0m')
 
-            #### Adding genJets info
-            if runOnMC:
-                from PhysicsTools.NanoAOD.jets_cff import genJetTable, genSubJetAK8Table
-                mod['jetToolboxGenJetTable'] = mod['GenJetsNoNu']+'JTBTable'
-                _addProcessAndTask( proc, mod['jetToolboxGenJetTable'], genJetTable.clone(
-                    src = cms.InputTag(mod["GenJetsNoNu"]),
-                    name = cms.string(mod["GenJetsNoNu"]),
-                    doc=cms.string("customized jetToolbox variables for genjets"),
-                    cut = cms.string(("pt > 100." if jetSize>.7 else 'pt>10' )),
-                    ))
-                jetSeq += getattr(proc, mod['jetToolboxGenJetTable'])
+			#### Adding genJets info
+			if runOnMC:
+				from PhysicsTools.NanoAOD.jets_cff import genJetTable, genSubJetAK8Table
+				mod['jetToolboxGenJetTable'] = mod['GenJetsNoNu']+'JTBTable'
+				_addProcessAndTask( proc, mod['jetToolboxGenJetTable'], genJetTable.clone(
+					src = cms.InputTag(mod["GenJetsNoNu"]),
+					name = cms.string(mod["GenJetsNoNu"]),
+					doc=cms.string("customized jetToolbox variables for genjets"),
+					cut = cms.string(("pt > 100." if jetSize>.7 else 'pt>10' )),
+					))
+				jetSeq += getattr(proc, mod['jetToolboxGenJetTable'])
 
-                if addPrunedSubjets or addSoftDropSubjets:
-                    mod['jetToolboxGenSubJetTable'] = mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]+'JTBTable'
-                    _addProcessAndTask( proc, mod['jetToolboxGenSubJetTable'], genJetTable.clone(
-                        src = cms.InputTag(mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]),
-                        name = cms.string(mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]),
-                        doc=cms.string("customized jetToolbox variables for gensubjets"),
-                        ))
-                    jetSeq += getattr(proc, mod['jetToolboxGenSubJetTable'])
+				if addPrunedSubjets or addSoftDropSubjets:
+					mod['jetToolboxGenSubJetTable'] = mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]+'JTBTable'
+					_addProcessAndTask( proc, mod['jetToolboxGenSubJetTable'], genJetTable.clone(
+						src = cms.InputTag(mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]),
+						name = cms.string(mod["GenJetsNoNu"+("SoftDrop" if addSoftDropSubjets else "Pruned")]),
+						doc=cms.string("customized jetToolbox variables for gensubjets"),
+						))
+					jetSeq += getattr(proc, mod['jetToolboxGenSubJetTable'])
 
 
-            #### Adding Jets info
-            mod['jetToolboxJetTable'] = mod["selPATJets"]+'JTBTable'
-            _addProcessAndTask( proc, mod['jetToolboxJetTable'], cms.EDProducer("SimpleCandidateFlatTableProducer",
-                src=cms.InputTag(mod["selPATJets"]),
-                name=cms.string(mod["selPATJets"]),
-                cut=cms.string(""),
-                doc=cms.string("customized jetToolbox variables for jets: "+mod["selPATJets"]),
-                singleton=cms.bool(False),  # the number of entries is variable
-                extension=cms.bool(False),  # this is the main table for the jets
-                variables=cms.PSet(P4Vars,
-                    area=Var("jetArea()", float, doc="jet catchment area, for JECs", precision=10),
-                    nMuons = Var("?hasOverlaps('muons')?overlaps('muons').size():0", int, doc="number of muons in the jet"),
-                    muonIdx1 = Var("?overlaps('muons').size()>0?overlaps('muons')[0].key():-1", int, doc="index of first matching muon"),
-                    muonIdx2 = Var("?overlaps('muons').size()>1?overlaps('muons')[1].key():-1", int, doc="index of second matching muon"),
-                    electronIdx1 = Var("?overlaps('electrons').size()>0?overlaps('electrons')[0].key():-1", int, doc="index of first matching electron"),
-                    electronIdx2 = Var("?overlaps('electrons').size()>1?overlaps('electrons')[1].key():-1", int, doc="index of second matching electron"),
-                    nElectrons = Var("?hasOverlaps('electrons')?overlaps('electrons').size():0", int, doc="number of electrons in the jet"),
-                    jetId = Var("userInt('looseId')+userInt('tightId')*2+4*userInt('tightIdLepVeto')",int,doc="Jet ID flags bit1 is loose, bit2 is tight, bit3 is tightLepVeto"),
-                    nConstituents = Var("numberOfDaughters()",int,doc="Number of particles in the jet"),
-                    rawFactor = Var("1.-jecFactor('Uncorrected')",float,doc="1 - Factor to get back to raw pT",precision=6),
-                    chHEF = Var("chargedHadronEnergyFraction()", float, doc="charged Hadron Energy Fraction", precision= 6),
-                    neHEF = Var("neutralHadronEnergyFraction()", float, doc="neutral Hadron Energy Fraction", precision= 6),
-                    chEmEF = Var("chargedEmEnergyFraction()", float, doc="charged Electromagnetic Energy Fraction", precision= 6),
-                    neEmEF = Var("neutralEmEnergyFraction()", float, doc="neutral Electromagnetic Energy Fraction", precision= 6),
-                    muEF = Var("muonEnergyFraction()", float, doc="muon Energy Fraction", precision= 6),
-                )
-            ))
+			#### Adding Jets info
+			mod['jetToolboxJetTable'] = mod["selPATJets"]+'JTBTable'
+			_addProcessAndTask( proc, mod['jetToolboxJetTable'], cms.EDProducer("SimpleCandidateFlatTableProducer",
+				src=cms.InputTag(mod["selPATJets"]),
+				name=cms.string(mod["selPATJets"]),
+				cut=cms.string(""),
+				doc=cms.string("customized jetToolbox variables for jets: "+mod["selPATJets"]),
+				singleton=cms.bool(False),  # the number of entries is variable
+				extension=cms.bool(False),  # this is the main table for the jets
+				variables=cms.PSet(P4Vars,
+					area=Var("jetArea()", float, doc="jet catchment area, for JECs", precision=10),
+					nMuons = Var("?hasOverlaps('muons')?overlaps('muons').size():0", int, doc="number of muons in the jet"),
+					muonIdx1 = Var("?overlaps('muons').size()>0?overlaps('muons')[0].key():-1", int, doc="index of first matching muon"),
+					muonIdx2 = Var("?overlaps('muons').size()>1?overlaps('muons')[1].key():-1", int, doc="index of second matching muon"),
+					electronIdx1 = Var("?overlaps('electrons').size()>0?overlaps('electrons')[0].key():-1", int, doc="index of first matching electron"),
+					electronIdx2 = Var("?overlaps('electrons').size()>1?overlaps('electrons')[1].key():-1", int, doc="index of second matching electron"),
+					nElectrons = Var("?hasOverlaps('electrons')?overlaps('electrons').size():0", int, doc="number of electrons in the jet"),
+					jetId = Var("userInt('looseId')+userInt('tightId')*2+4*userInt('tightIdLepVeto')",int,doc="Jet ID flags bit1 is loose, bit2 is tight, bit3 is tightLepVeto"),
+					nConstituents = Var("numberOfDaughters()",int,doc="Number of particles in the jet"),
+					rawFactor = Var("1.-jecFactor('Uncorrected')",float,doc="1 - Factor to get back to raw pT",precision=6),
+					chHEF = Var("chargedHadronEnergyFraction()", float, doc="charged Hadron Energy Fraction", precision= 6),
+					neHEF = Var("neutralHadronEnergyFraction()", float, doc="neutral Hadron Energy Fraction", precision= 6),
+					chEmEF = Var("chargedEmEnergyFraction()", float, doc="charged Electromagnetic Energy Fraction", precision= 6),
+					neEmEF = Var("neutralEmEnergyFraction()", float, doc="neutral Electromagnetic Energy Fraction", precision= 6),
+					muEF = Var("muonEnergyFraction()", float, doc="muon Energy Fraction", precision= 6),
+				)
+			))
 
-            for varName, varDef in jetVariables.iteritems(): setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, varName.replace(":","_"), varDef )
-            if runOnMC:
-                setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables,  'partonFlavor', Var('partonFlavour()', int, doc="flavour from parton matching" ) )
-                setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables,  'hadronFlavor', Var('hadronFlavour()', int, doc="flavour from hadron matching" ) )
+			for varName, varDef in jetVariables.iteritems(): setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, varName.replace(":","_"), varDef )
+			if runOnMC:
+				setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables,  'partonFlavor', Var('partonFlavour()', int, doc="flavour from parton matching" ) )
+				setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables,  'hadronFlavor', Var('hadronFlavour()', int, doc="flavour from hadron matching" ) )
 
-            if addPrunedSubjets or addSoftDropSubjets:
-                setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, 'subJetIdx1', Var("?nSubjetCollections()>0 && subjets().size()>0?subjets()[0].key():-1", int, doc="index of first subjet") ),
-                setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, 'subJetIdx2', Var("?nSubjetCollections()>0 && subjets().size()>1?subjets()[1].key():-1", int, doc="index of second subjet") ),
+			if addPrunedSubjets or addSoftDropSubjets:
+				setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, 'subJetIdx1', Var("?nSubjetCollections()>0 && subjets().size()>0?subjets()[0].key():-1", int, doc="index of first subjet") ),
+				setattr( getattr( proc, mod['jetToolboxJetTable'] ).variables, 'subJetIdx2', Var("?nSubjetCollections()>0 && subjets().size()>1?subjets()[1].key():-1", int, doc="index of second subjet") ),
 
-                mod["jetToolboxSubjetTable"] = mod["selPATJets"+('Pruned' if addPrunedSubjets else 'SoftDrop')+"Packed"]+'SubJetsJTBTable'
-                _addProcessAndTask( proc, mod['jetToolboxSubjetTable'], cms.EDProducer("SimpleCandidateFlatTableProducer",
-                    src=cms.InputTag(mod["selPATJets"+('Pruned' if addPrunedSubjets else 'SoftDrop')+"Packed"]+':SubJets'),
-                    name=cms.string(mod["selPATJets"]+('Pruned' if addPrunedSubjets else 'SoftDrop')+'_Subjets'),
-                    cut=cms.string(""),
-                    doc=cms.string("customized jetToolbox variables for subjets"),
-                    singleton=cms.bool(False),  # the number of entries is variable
-                    extension=cms.bool(False),  # this is the main table for the jets
-                    variables=cms.PSet(P4Vars,
-                        rawFactor=Var("1.-jecFactor('Uncorrected')", float, doc="1 - Factor to get back to raw pT", precision=6),
-                        area=Var("jetArea()", float, doc="jet catchment area, for JECs", precision=10),
-                        nBHadrons=Var("jetFlavourInfo().getbHadrons().size()", int, doc="number of b-hadrons"),
-                        nCHadrons=Var("jetFlavourInfo().getcHadrons().size()", int, doc="number of c-hadrons"),
-                    )
-                ))
-                for varName, varDef in subjetVariables.iteritems(): setattr( getattr( proc, mod['jetToolboxSubjetTable']).variables, varName.replace(":","_"), varDef )
-                jetSeq += getattr(proc, mod['jetToolboxSubjetTable'])
-            jetSeq += getattr(proc, mod['jetToolboxJetTable'])
+				mod["jetToolboxSubjetTable"] = mod["selPATJets"+('Pruned' if addPrunedSubjets else 'SoftDrop')+"Packed"]+'SubJetsJTBTable'
+				_addProcessAndTask( proc, mod['jetToolboxSubjetTable'], cms.EDProducer("SimpleCandidateFlatTableProducer",
+					src=cms.InputTag(mod["selPATJets"+('Pruned' if addPrunedSubjets else 'SoftDrop')+"Packed"]+':SubJets'),
+					name=cms.string(mod["selPATJets"]+('Pruned' if addPrunedSubjets else 'SoftDrop')+'_Subjets'),
+					cut=cms.string(""),
+					doc=cms.string("customized jetToolbox variables for subjets"),
+					singleton=cms.bool(False),  # the number of entries is variable
+					extension=cms.bool(False),  # this is the main table for the jets
+					variables=cms.PSet(P4Vars,
+						rawFactor=Var("1.-jecFactor('Uncorrected')", float, doc="1 - Factor to get back to raw pT", precision=6),
+						area=Var("jetArea()", float, doc="jet catchment area, for JECs", precision=10),
+						nBHadrons=Var("jetFlavourInfo().getbHadrons().size()", int, doc="number of b-hadrons"),
+						nCHadrons=Var("jetFlavourInfo().getcHadrons().size()", int, doc="number of c-hadrons"),
+					)
+				))
+				for varName, varDef in subjetVariables.iteritems(): setattr( getattr( proc, mod['jetToolboxSubjetTable']).variables, varName.replace(":","_"), varDef )
+				jetSeq += getattr(proc, mod['jetToolboxSubjetTable'])
+			jetSeq += getattr(proc, mod['jetToolboxJetTable'])
 	#################################################################################
 
 
 	#################################################################################
 	###### Adding to outputModule OR creating output file
 	setattr(proc, jetSequence, jetSeq)
-        if hasattr(proc, outputFile): getattr(proc, outputFile).outputCommands += elemToKeep
-        else: setattr( proc, outputFile,
-                    cms.OutputModule('PoolOutputModule',
-                            fileName = cms.untracked.string('jettoolbox.root'),
-                            outputCommands = cms.untracked.vstring( elemToKeep ) ) )
+		if hasattr(proc, outputFile): getattr(proc, outputFile).outputCommands += elemToKeep
+		else: setattr( proc, outputFile,
+					cms.OutputModule('PoolOutputModule',
+							fileName = cms.untracked.string('jettoolbox.root'),
+							outputCommands = cms.untracked.vstring( elemToKeep ) ) )
 
-        task = getPatAlgosToolsTask(proc)
-        if hasattr(proc, 'endpath'):
-            getattr(proc, 'endpath').associate(task)
-        else:
-            if outputFile=='noOutput':
-                setattr( proc, 'endpath', cms.EndPath(task) )
-            else: setattr( proc, 'endpath', cms.EndPath(getattr(proc, outputFile), task) )
+		task = getPatAlgosToolsTask(proc)
+		if hasattr(proc, 'endpath'):
+			getattr(proc, 'endpath').associate(task)
+		else:
+			if outputFile=='noOutput':
+				setattr( proc, 'endpath', cms.EndPath(task) )
+			else: setattr( proc, 'endpath', cms.EndPath(getattr(proc, outputFile), task) )
 
 
 	#################################################################################
@@ -1456,5 +1456,5 @@ def jetToolbox( proc, jetType, jetSequence, outputFile,
 #### Way to add process and task
 #### Taken from: https://github.com/hqucms/NanoHRT/blob/master/python/jetToolbox_cff.py
 def _addProcessAndTask(proc, label, module):
-    task = getPatAlgosToolsTask(proc)
-    addToProcessAndTask(label, module, proc, task)
+	task = getPatAlgosToolsTask(proc)
+	addToProcessAndTask(label, module, proc, task)
